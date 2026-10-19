@@ -1,9 +1,11 @@
 from anthropic import AsyncAnthropic
-  
-from .base import Message
+
+from chat_models.base import Message
+
 
 class AnthropicChatModel:
-    """ChatModel backed by Anthropic's Messages API.""" 
+    """ChatModel backed by Anthropic's Messages API."""
+
     def __init__(self, model: str = "claude-haiku-5-5", max_tokens: int = 300):
         self._client = AsyncAnthropic()
         self._model = model
@@ -15,6 +17,6 @@ class AnthropicChatModel:
             max_tokens=self._max_tokens,
             system=system,
             messages=messages,
-            thinking={"type": "disabled"}
+            thinking={"type": "disabled"},
         )
         return response.content[0].text
