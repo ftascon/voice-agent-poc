@@ -13,7 +13,7 @@ class CallHandler:
         self._conversations[call_id] = []
         return GREETING
 
-    async def handle_speech(self, call_id: str, speech: str) -> str:
+    async def handle_speech(self, call_id: str, speech: str) -> tuple[str, bool]:
         """The caller said something. Returns the agent's reply."""
         history = self._conversations.setdefault(call_id, [])
         history.append({"role": "user", "content": speech})
@@ -23,3 +23,6 @@ class CallHandler:
         history.append({"role": "assistant", "content": reply})
         done = END_MARKER in reply
         return reply.replace(END_MARKER, "").strip(), done
+    
+    def transcript(self, call_id: str) -> list[Message]:
+        return list(self._conversations.get(call_id, []))
