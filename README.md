@@ -1,49 +1,34 @@
-# Voice Agent POC
+# Voice agent POC
 
-An AI phone agent that answers calls. Built step by step as a proof of concept: Twilio Voice for the calls and Python FastAPI service for the logic.
+An AI phone agent that answers calls, qualifies solar leads in a natural conversation, and creates a deal in HubSpot through n8n.
 
+**Stack:** Python · FastAPI · Twilio Voice · Claude · n8n · HubSpot · Render
 
-## How it works
+## Demo
 
+![n8n workflow: call ended → Claude extracts lead fields → HubSpot deal](docs/n8n-workflow.png)
 
+*When a call ends, the app posts the transcript to n8n. Claude extracts the lead fields and n8n creates the deal in HubSpot.*
 
-```
-📞 Twilio number is called
-      │
-      ▼
-Twilio > POST /voice/incoming > ngrok (public HTTPS URL) > FastAPI on localhost:8000
-      ▲                                                              │
-      └────────── TwiML: <Response><Say>Hello…</Say></Response> ◄────┘
-      │
-      ▼
-Twilio speaks
-```
+![Deal created in HubSpot after a call](docs/hubspot-deal.png)
 
+*The resulting deal, with the call summary and the qualification fields.*
 
-## Endpoints
+## Architecture
 
-- **`GET /health`**: Health check. Returns `{"status": "healthy"}` as JSON. Used to confirm the service is up.
-
-- **`POST /voice/incoming`**: Twilio webhook, called when someone dials the Twilio number.
-
-
-## Running it locally
-
-Requires Python 3.10+, a Twilio account and a free ngrok account.
-
-```bash
-# 1. Install
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# 2. Start the service
-uvicorn app.main:app --reload --port 8000
-
-# 3. Open the tunnel
-ngrok http 8000
+```mermaid
+flowchart LR
+    Caller((Caller)) --> Twilio[Twilio<br/>speech-to-text]
+    Twilio <--> App[FastAPI on Render]
+    App <--> Claude[Claude<br/>conversation]
+    App -- call ends --> N8N[n8n webhook]
+    N8N --> Extract[Claude<br/>field extraction]
+    Extract --> HubSpot[(HubSpot deal)]
 ```
 
-Then, in the Twilio console, point incoming calls at `https://<your-ngrok-url>/voice/incoming` (HTTP POST) and calls Twilio's number.
+## How a call works
 
-
+1. Twilio posts to `/voice/incoming`. The agent greets the caller and listens.
+2. Each answer arrives at `/voice/gather`, and Claude decides what to say next.
+3. Once all the info is collected, Claude adds `[END]`. The agent says goodbye and hangs up.
+4. In the background, the transcript goes to n8n, which extracts the fields and creates the deal.
