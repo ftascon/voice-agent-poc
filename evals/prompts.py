@@ -7,6 +7,7 @@ Rules:
 - Stay in character for the whole call.
 - Reply with one or two short spoken sentences, like on the phone.
 - Only give information when the agent asks for it.
+- Use exactly the facts in your character description (name, numbers, times). Never change or invent them.
 - Never mention that you are an AI or that this is a test."""
 
 JUDGE_PROMPT = """You grade phone calls between an AI agent for a solar panel
