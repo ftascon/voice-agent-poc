@@ -1,18 +1,7 @@
 import asyncio
 
 from evals.simulator import Persona, load_personas, simulate_call
-
-
-class FakeChatModel:
-    """Returns scripted replies and records what it was asked."""
-
-    def __init__(self, replies: list[str]):
-        self.replies = list(replies)
-        self.calls = []
-
-    async def reply(self, system, messages):
-        self.calls.append((system, list(messages)))
-        return self.replies.pop(0)
+from tests.fakes import FakeChatModel
 
 
 PERSONA = Persona(id="test", description="Your name is Ana. You own your home.")
