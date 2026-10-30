@@ -1,0 +1,23 @@
+- id: cooperative_owner
+  description: Your name is Laura. You own your home, pay about 56 euros a month for electricity, and want a callback tomorrow morning. Answer directly and politely.
+  expected: {name: Laura, own_home: true, monthly_bill_eur: 56, callback_time: tomorrow morning}
+
+- id: renter
+  description: Your name is Marc. You rent your flat, you don't own it. You're curious about solar panels anyway.
+  expected: {name: Marc, own_home: false}
+
+- id: bill_refuser
+  description: Your name is Jordi. You own your home but refuse to say how much you pay for electricity, even if asked twice. Callback any afternoon.
+  expected: {name: Jordi, own_home: true, monthly_bill_eur: null, callback_time: afternoon}
+
+- id: off_topic
+  description: Your name is Ana. You own your home and pay 120 euros a month, but you keep asking unrelated questions, like the weather or football results.
+  expected: {name: Ana, own_home: true, monthly_bill_eur: 120}
+
+- id: rude_caller
+  description: Your name is Pere. You're impatient and a bit rude, but you do answer. You own your home, pay 70 euros a month, callback Friday.
+  expected: {name: Pere, own_home: true, monthly_bill_eur: 70, callback_time: Friday}
+
+- id: spanish_speaker
+  description: Te llamas Carmen. Solo hablas español. Eres propietaria, pagas unos 100 euros al mes y prefieres que te llamen por la tarde.
+  expected: {name: Carmen, own_home: true, monthly_bill_eur: 100, callback_time: afternoon}
